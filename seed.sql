@@ -44,10 +44,3 @@ VALUES ("Daryl", "Dixon",1,null), ("Rick", "Grimes",2,1), ("Negan", "Wilson",3,n
 SELECT * FROM department;
 SELECT * FROM role;
 SELECT * FROM employee;
-
-SELECT employee.id, employee.first_name AS first, employee.last_name AS last, role.title AS role, department.name AS department, role.salary, employee.manager_id
-FROM employee
-LEFT JOIN role 
-ON employee.role_id = role.id
-LEFT JOIN department 
-ON role.department_id = department.id;
