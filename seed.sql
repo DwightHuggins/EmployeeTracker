@@ -16,30 +16,31 @@ CREATE TABLE role(
     salary DECIMAL,
     department_id INT,
      PRIMARY KEY (id)
+     FOREIGN KEY (department_id) REFERENCES department (role_id)
 );
 
 CREATE TABLE employee(
-    first_name VARCHAR (30),
-    last_name VARCHAR (30),
-    role_id INT,
-    manager_id INT,
-    PRIMARY KEY (id)
-);
+    id INT AUTO_INCREMENT, 
+   first_name VARCHAR (30),
+   last_name VARCHAR (30),
+   role_id INT,
+   manager_id INT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (role_id) REFERENCES role(id),
+    FOREIGN KEY (manager_id) REFERENCES employee(id)
+ );
 
 
+INSERT INTO department (name)
+VALUES ("Sales"), ("Engineering"), ("Finance"), ("Legal");
+
+INSERT INTO role (title, salary)
+VALUES ("Sales Lead", 60000), ("Sales Person", 40000), ("Lead Engineer", 100000), ("Software Engineer", 70000), ("Account Manager", 50000), ("Accountant", 60000), ("Legal Team Lead", 150000), ("Lawyer", 90000);
+
+INSERT INTO employee (first_name, last_name)
+VALUES ("Daryl", "Reedus"), ("Rick", "Grimes"), ("Negan", "Wilson"), ("Carol", "Peletier"), ("Maggie", "Green"), ("Michonne", "Hawthorne"), ("Eugene", "Porter"), ("Rosita", "Espinosa");
 
 
-INSERT INTO songs (title, artist, genre)
-VALUES ("Sweet Home Alabama", "Lynyrd Skynrd", "Southern Rock");
-
-
-INSERT INTO songs (title, artist, genre)
-VALUES ("Oops I Did It Again", "Britney Spears", "Pop");
-
-
-INSERT INTO songs (title, artist, genre)
-VALUES ("Thunder Rolls", "Garth Brooks", "Country");
-
-SELECT * FROM songs
---Only songs from beatles?
-WHERE arist = "Beatles"; 
+SELECT * FROM department;
+SELECT * FROM role;
+SELECT * FROM employee;
