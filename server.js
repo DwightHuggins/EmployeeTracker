@@ -13,14 +13,35 @@ var connection = mysql.createConnection({
 
   // Your password
   password: "Gracie19!",
-  database: "employee_DB"
+  database: "employee_DB",
 });
 
 // connect to the mysql server and sql database
-connection.connect(function(err) {
+connection.connect(function (err) {
   if (err) throw err;
   console.log("connected as id " + connection.threadId + "\n");
-//   functionName();
-connection.end()
+  userPrompt();
 });
 
+//Start inquirer prompts
+//What would you like to do list?
+function userPrompt() {
+  inquirer
+    .prompt([
+      {
+        name: "action",
+        type: "list",
+        message: "What would you like to do?",
+        choices: [
+          "View All Employees",
+          "View All Employees by Department",
+          "View All Employees by Manager",
+          "View All Roles",
+          "View All Departments",
+          "Add Employee",
+          "Add Role",
+          "Add Department",
+          "Exit",
+        ],
+      },
+    ])
