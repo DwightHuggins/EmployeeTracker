@@ -130,3 +130,197 @@ function viewEmpDept() {
       userPrompt();
     });
   }
+
+
+//Create function to view all employees by department
+function viewManager() {
+    //Variable for left join to view employee by department
+    const viewManagerJoin = `SELECT employee.manager_id AS "Manager ID",
+    CONCAT(manager.first_name, " ", manager.last_name) as "Manager Name",
+     employee.id AS "Employee ID",
+     CONCAT(employee.first_name, " ", employee.last_name) as "Employee"
+      FROM employee employee
+      LEFT JOIN employee manager 
+      ON employee.manager_id = manager.id
+      WHERE employee.manager_id IS NOT NULL
+      ORDER BY "Manager Name" DESC;`;
+    connection.query(viewManagerJoin, function (err, data) {
+      if (err) throw err;
+      console.table(data);
+      userPrompt();
+    });
+  }
+  
+  //Add Employee Function
+  function addEmployee() {
+    const selectEmployeeQuery = "select * from employee";
+    const selectRolesQuery = "select * from role";
+  
+    connection.query(selectEmployeeQuery, function (err, employeeData) {
+      if (err) console.log(err);
+  
+      connection.query(selectRolesQuery, function (err, roleData) {
+  
+        if (err) console.log(err);
+        const roles = roleData.map((role) => {
+          return {
+            name: role.title,
+            value: role.id,
+          };
+        });
+  
+        const employees = employeeData.map((employee) => {
+          return {
+            name: employee.first_name + " " + employee.last_name,
+            value: employee.id,
+          };
+        });
+        inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "roleId",
+            message: "What is this employees role?",
+            choices: roles,
+          },
+          {
+            type: "list",
+            name: "managerId",
+            message: "Who is this employee's manager?",
+            choices: employees,
+          },
+          {
+            type: "input",
+            name: "fname",
+            message: "what is the employee's first name",
+          },
+          {
+            type: "input",
+            name: "lname",
+            message: "what is the employee's last name",
+          },
+        ])
+        .then(function (responses) {
+          const employeeInsertQuery = `insert into employee (first_name, last_name, role_id, manager_id) values ("${responses.fname}", "${responses.lname}",${responses.roleId},${responses.managerId} )`;
+
+          connection.query(employeeInsertQuery, function (err, data) {
+            if (err) console.log(err);
+            userPrompt();
+          });
+        });
+    });
+  });
+}
+
+
+//Add Role
+function addRole() {
+    const selectRolesQuery = "select * from role";
+    const selectDepartmentQuery = "select * from department";
+  
+    connection.query(selectRolesQuery, function (err, roleData) {
+      if (err) console.log(err);
+  
+      connection.query(selectDepartmentQuery, function (err, departmentData) {
+        if (err) console.log(err);
+  
+        const roles = roleData.map((role) => {
+          return {
+            name: role.title,
+            value: role.id,
+          };
+        });
+  
+        const departments = departmentData.map((department) => {
+          return {
+            name: department.name,
+            value: department.id,
+          };
+        });
+  
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              name: "roleId",
+              message: "What role would you like to add?",
+              choices: roles
+            },
+            {
+              type: "input",
+              name: "salary",
+              message: "What is the salary of this role (NO commas or $ sign)?",
+            },
+            {
+              type: "list",
+              name: "departmentId",
+              message: "What department would you like this role to?",
+              choices: departments,
+            },
+          ])
+          .then(function (responses) {
+            const roleInsertQuery = `insert into role (title, salary, department_id) values ("${responses.roleId}", ${responses.salary},${responses.departmentId})`;
+  
+            connection.query(roleInsertQuery, function (err, data) {
+              if (err) console.log(err);
+              userPrompt();
+            });
+          });
+      });
+    });
+  }
+  
+  //Add Department
+  function addDepartment() {
+    const selectDepartmentQuery = "select * from department";
+  
+    connection.query(selectDepartmentQuery, function (err, departmentData) {
+      if (err) console.log(err);
+  
+  
+      const departments = departmentData.map((department) => {
+        return {
+          name: department.name,
+          value: department.id,
+        };
+      });
+  
+      inquirer
+        .prompt([
+          {
+            type: "input",
+            name: "roleId",
+            message: "What department would you like to add?",
+            choices: departments
+          }
+        ])
+        .then(function (responses) {
+          const departmentInsertQuery = `insert into department (name) values ("${responses.roleId}")`;
+  
+          connection.query(departmentInsertQuery, function (err, data) {
+            if (err) console.log(err);
+            userPrompt();
+          });
+        });
+    });
+  }
+  
+  //View All Roles
+  function viewRoles() {
+    const viewAllRoles = `SELECT role.title AS Role, role.salary AS Salary, role.department_ID AS Department FROM role ORDER BY role.title DESC;`;
+    connection.query(viewAllRoles, function (err, data) {
+      if (err) throw err;
+      console.table(data);
+      userPrompt();
+    });
+  }
+  
+  //View All Departments
+  function viewDepartments() {
+    const viewAllDepartments = `SELECT department.name AS Departments FROM department ORDER BY department.name ASC;`;
+    connection.query(viewAllDepartments, function (err, data) {
+      if (err) throw err;
+      console.table(data);
+      userPrompt();
+    });
+  }
