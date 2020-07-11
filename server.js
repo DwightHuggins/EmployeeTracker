@@ -45,3 +45,53 @@ function userPrompt() {
         ],
       },
     ])
+    .then(function (answer) {
+        // console.log(answer.action)
+        //Conditional for selected action
+        if (answer.action === "View All Employees") {
+          //If 'View All Employees' is selected, call viewAll() function
+          viewAll();
+        }
+        //If 'View All Employees by Dept' is selected, call viewDept() function
+        else if (answer.action === "View All Employees by Department") {
+          // console.log("View All Employees by Department Selected")
+          viewEmpDept();
+        }
+        //If 'View All Employees by Manager' is selected, call viewManager() function
+        else if (answer.action === "View All Employees by Manager") {
+          // console.log("View All Employees by Manager Selected")
+          viewManager();
+        }
+        //If 'View All Roles' is selected, call viewRoles() function
+        else if (answer.action === "View All Roles") {
+          // console.log("Add Employee Selected")
+          viewRoles();
+        }
+        //If 'View All Departments' is selected, call viewDepartments() function
+        else if (answer.action === "View All Departments") {
+          // console.log("Add Employee Selected")
+          viewDepartments();
+        }
+        //If 'Add Employee' is selected, call addEmployee() function
+        else if (answer.action === "Add Employee") {
+          // console.log("Add Employee Selected")
+          addEmployee();
+        }
+        //If 'Add Role' is selected, call addRole() function
+        else if (answer.action === "Add Role") {
+          // console.log("Add role");
+          addRole();
+        }
+        //If 'Add Department' is selected, call updateRole() function
+        else if (answer.action === "Add Department") {
+          // console.log("Add Department");
+          addDepartment();
+        }
+        //If 'Exit' is selected, return userPrompt()
+        else {
+          console.log("Exit Selected");
+          connection.end();
+        }
+  
+      });
+  }
