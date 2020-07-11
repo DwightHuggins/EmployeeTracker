@@ -114,4 +114,19 @@ function viewAll() {
       userPrompt();
     });
   }
-  
+  //Create function to view all employees by department
+function viewEmpDept() {
+    //Variable for left join to view employee by department
+    const viewDepartmentJoin = `SELECT department.name AS department, CONCAT(employee.first_name, " ", employee.last_name) as "Employee" , employee.id
+    FROM employee
+    LEFT JOIN role 
+    ON employee.role_id = role.id
+    LEFT JOIN department 
+    ON role.department_id = department.id
+    ORDER BY department.name DESC;`;
+    connection.query(viewDepartmentJoin, function (err, data) {
+      if (err) throw err;
+      console.table(data);
+      userPrompt();
+    });
+  }
