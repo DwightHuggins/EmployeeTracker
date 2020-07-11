@@ -211,3 +211,116 @@ function viewManager() {
     });
   });
 }
+
+
+//Add Role
+function addRole() {
+    const selectRolesQuery = "select * from role";
+    const selectDepartmentQuery = "select * from department";
+  
+    connection.query(selectRolesQuery, function (err, roleData) {
+      if (err) console.log(err);
+  
+      connection.query(selectDepartmentQuery, function (err, departmentData) {
+        if (err) console.log(err);
+  
+        const roles = roleData.map((role) => {
+          return {
+            name: role.title,
+            value: role.id,
+          };
+        });
+  
+        const departments = departmentData.map((department) => {
+          return {
+            name: department.name,
+            value: department.id,
+          };
+        });
+  
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              name: "roleId",
+              message: "What role would you like to add?",
+              choices: roles
+            },
+            {
+              type: "input",
+              name: "salary",
+              message: "What is the salary of this role (NO commas or $ sign)?",
+            },
+            {
+              type: "list",
+              name: "departmentId",
+              message: "What department would you like this role to?",
+              choices: departments,
+            },
+          ])
+          .then(function (responses) {
+            const roleInsertQuery = `insert into role (title, salary, department_id) values ("${responses.roleId}", ${responses.salary},${responses.departmentId})`;
+  
+            connection.query(roleInsertQuery, function (err, data) {
+              if (err) console.log(err);
+              userPrompt();
+            });
+          });
+      });
+    });
+  }
+  
+  //Add Department
+  function addDepartment() {
+    const selectDepartmentQuery = "select * from department";
+  
+    connection.query(selectDepartmentQuery, function (err, departmentData) {
+      if (err) console.log(err);
+  
+  
+      const departments = departmentData.map((department) => {
+        return {
+          name: department.name,
+          value: department.id,
+        };
+      });
+  
+      inquirer
+        .prompt([
+          {
+            type: "input",
+            name: "roleId",
+            message: "What department would you like to add?",
+            choices: departments
+          }
+        ])
+        .then(function (responses) {
+          const departmentInsertQuery = `insert into department (name) values ("${responses.roleId}")`;
+  
+          connection.query(departmentInsertQuery, function (err, data) {
+            if (err) console.log(err);
+            userPrompt();
+          });
+        });
+    });
+  }
+  
+  //View All Roles
+  function viewRoles() {
+    const viewAllRoles = `SELECT role.title AS Role, role.salary AS Salary, role.department_ID AS Department FROM role ORDER BY role.title DESC;`;
+    connection.query(viewAllRoles, function (err, data) {
+      if (err) throw err;
+      console.table(data);
+      userPrompt();
+    });
+  }
+  
+  //View All Departments
+  function viewDepartments() {
+    const viewAllDepartments = `SELECT department.name AS Departments FROM department ORDER BY department.name ASC;`;
+    connection.query(viewAllDepartments, function (err, data) {
+      if (err) throw err;
+      console.table(data);
+      userPrompt();
+    });
+  }
